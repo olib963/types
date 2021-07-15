@@ -32,4 +32,11 @@ object RefinedRedux {
     case Failed(error)   => error.getMessage
     case Success(result) => result
   }
+
+  def injectivelyBack(redux: RefinedRedux): StandardRedux = redux match {
+    case Loading         => StandardRedux(loading = true, None, None)
+    case Failed(error)   => StandardRedux(loading = false, Some(error), None)
+    case Success(result) => StandardRedux(loading = false, None, Some(result))
+  }
+
 }

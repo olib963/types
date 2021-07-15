@@ -1,7 +1,6 @@
 # Foo
 
 - [ ] Come up with name for project: Validation is for suckers?? Parsing is great. Simplifying your state. Always Valid, mostly correct. Should not => Can not. Replacing tests with types!
-- [ ] Is it ZipList? OR something else?? Watch vid again
 - [ ] Consistency in the package presentation
 - [ ] Tests and property tests
 - [ ] High level overview of what you want to achieve
@@ -9,6 +8,8 @@
 - [ ] Links to related posts and talks, PNV, Elm survey, Elm Accessibility, Making Impossible states irrepresentable, Decoders? What else?
 - [ ] Slides? For OTF
 - [ ] Example Gifs from Games
+- [ ] Push to private repo
+- [ ] Later to more public one
 
 
 

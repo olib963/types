@@ -8,7 +8,6 @@ object StandardList extends Application {
 
   def describe(ints: List[Int]): ListDescription = ListDescription(min(ints), max(ints), sum(ints))
 
-  // This is a pattern match for symmetry
   def sum(ints: List[Int]): Int = ints match {
     case Nil          => 0
     case head :: tail => tail.foldLeft(head)(_ + _)
@@ -24,6 +23,29 @@ object StandardList extends Application {
     case head :: tail => tail.foldLeft(head)(_ max _)
   }
 
+}
+
+trait OptionApplication {
+  def describeOption(ints: List[Int]): Option[ListDescription]
+}
+
+object StandardListWithOption extends OptionApplication {
+
+  def describeOption(ints: List[Int]): Option[ListDescription] =
+    minOption(ints) match {
+      case None => None
+      case Some(min) =>
+        maxOption(ints) match {
+          case None      => sys.error("This can never happen! We've already checked for an empty list")
+          case Some(max) => Some(ListDescription(min, max, sum(ints)))
+        }
+    }
+
+  def sum(ints: List[Int]): Int = ints match {
+    case Nil          => 0
+    case head :: tail => tail.foldLeft(head)(_ + _)
+  }
+
   def minOption(ints: List[Int]): Option[Int] = ints match {
     case Nil          => None
     case head :: tail => Some(tail.foldLeft(head)(_ min _))
@@ -34,15 +56,13 @@ object StandardList extends Application {
     case head :: tail => Some(tail.foldLeft(head)(_ max _))
   }
 
-  def boundsOption(ints: List[Int]): Option[ListDescription] =
-    minOption(ints) match {
-      case None => None
-      case Some(min) =>
-        maxOption(ints) match {
-          case None      => sys.error("This can never happen! We've already checked for an empty list")
-          case Some(max) => Some(ListDescription(min, max, sum(ints)))
-        }
+  def optionClient = {
+    val description = describeOption(List(1, 2, 3))
+    description match {
+      case Some(value) => println(value)
+      case None        => sys.error("I know my list is not empty!")
     }
+  }
 
 }
 
@@ -53,6 +73,6 @@ object InvalidStates {
 object ValidStates {
   val correct = List(1, 2, 3)
 
-  // Accidentally typed in the wrong nuber of -3
+  // Accidentally typed in the wrong number of -3
   val incorrect = List(1, 2, -3)
 }

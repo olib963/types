@@ -2,8 +2,8 @@ package survey
 
 import lists.NonEmptyList
 
-// TODO is it ziplist? Check elm
 case class ZipList[A](previous: List[A], current: A, next: List[A])
+
 object ZipList {
   def fromNonEmpty[A](list: NonEmptyList[A]): ZipList[A] =
     ZipList(previous = List.empty, current = list.head, next = list.tail)
@@ -48,10 +48,20 @@ object Survey {
 }
 
 object OnlyValidStates {
-  val correct = Survey.of(NonEmptyList("What's your name?", List.empty))
+  val initial = Survey.of(NonEmptyList("What's your name?", List("What's your favourite colour?")))
+  val correct = Survey.answerQuestion(initial, "Oli")
 
-  val incorrect = {
-    val initial = Survey.of(NonEmptyList("What's your name?", List("What's your favourite colour?")))
-    Survey.answerQuestion(initial, "Red") // Answered the wrong question
+  val incorrect = Survey.answerQuestion(initial, "Red") // Answered the wrong question
+}
+
+object InjectiveFunction {
+  import survey.Survey.Survey
+  def back(survey: Survey): FirstAttempt = {
+    val questions = ZipList.toList(survey)
+    FirstAttempt(
+      questions = questions.map(_.question),
+      answers = questions.map(_.answer),
+      current = survey.previous.size,
+    )
   }
 }

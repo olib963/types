@@ -16,9 +16,17 @@ case object InActive extends MyADTStatus
 case object Deleted  extends MyADTStatus
 
 object MyADTStatus {
+
   def toString(myStatus: MyADTStatus): String = myStatus match {
     case Active   => "Active"
     case InActive => "InActive"
     case Deleted  => "Deleted"
   }
+
+  def injectivelyBack(myADTStatus: MyADTStatus): MyStatus = myADTStatus match {
+    case Active   => MyStatus(isActive = true, isDeleted = false)
+    case InActive => MyStatus(isActive = false, isDeleted = false)
+    case Deleted  => MyStatus(isActive = false, isDeleted = true)
+  }
+
 }
