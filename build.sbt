@@ -1,4 +1,4 @@
-name := "types"
+name := "impossible-states"
 
 version := "0.1"
 

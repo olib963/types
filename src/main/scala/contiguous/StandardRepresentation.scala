@@ -10,7 +10,6 @@ case class StandardRepresentation(periods: Map[DatabaseId, Period])
 object StandardRepresentation {
   type DatabaseId = Int
 
-  // I understand that these are usually stored as sep
   def updatePeriodEnd(state: StandardRepresentation, id: DatabaseId, newEnd: LocalDate): StandardRepresentation =
     state.periods.get(id) match {
       case None => sys.error(s"Period with Id $id does not exist")
@@ -38,9 +37,19 @@ object StandardRepresentation {
     // Start _should_ be before end. But is it though?
     assert(period.start.isBefore(period.end), s"Period $period is invalid! Start must be before end")
     assert(!state.periods.contains(id), s"$id already exists in our state")
-    state.copy(periods = state.periods.updated(id, period))
+    state.copy(periods = state.periods.updated(id, period)) // Did this create a gap or an overlap?
   }
 
+  /** A function that attempts to correctly insert a new period into the timeline. Usually this is
+    * left to clients to do by using the above manipulating functions.
+    *
+    * Assuming the old state and new period we want is:
+    *  |------------------->||------------------->| (old)
+    *            |-------------------->| (new)
+    *
+    * We want to end up with:
+    * |------->||-------------------->||-------->|
+    */
   def correctlyCreateNewPeriod(
     state: StandardRepresentation,
     id: DatabaseId,
@@ -48,26 +57,38 @@ object StandardRepresentation {
   ): StandardRepresentation = {
     // Start _should_ be before end. But is it though?
     assert(period.start.isBefore(period.end), s"Period $period is invalid! Start must be before end")
-    // Find period containing start date, update the end to be 1 day before start of new.
-    // Find period containing end date, update start date to be 1 day after end of new.
-    val (beforePeriods, startsAfterStart) = state.periods.values.partition(_.start.isBefore(period.start))
-    val periodContainingStart             = ???
-    val periodContainingEnd               = ???
-    val newPeriods                        = state.periods
-    // |------------------->||------------------->|
-    //           |-------------------->|
 
-    // becomes
-    // |------->||-------------------->||-------->|
-    //
+    // Find period containing the start date, if it exist update the end to be 1 day before start of new period.
+    val lastPeriodStartingBeforeNewPeriod =
+      state.periods.toList
+        .sortBy(_._2.start)
+        .findLast(_._2.start.isBefore(period.start))
 
-    // but what about
-    // |---------------------------------->||------------->|
-    //           |-------------------->|
+    val updatedState = lastPeriodStartingBeforeNewPeriod match {
+      case Some((id, _)) => updatePeriodEnd(state, id, period.start.minusDays(1))
+      case None          => state
+    }
 
-    // this becomes
-    // |-------->|-------------------->|    |------------->|
-    state.copy(periods = newPeriods)
+    // Find period containing the end date, if it exists update start date to be 1 day after end of new period.
+    val firstPeriodEndingAfterNewPeriod =
+      state.periods.toList
+        .sortBy(_._2.start)
+        .find(_._2.end.isAfter(period.end))
+
+    val stateWithNewStart = firstPeriodEndingAfterNewPeriod match {
+      case Some((id, _)) => updatePeriodStart(updatedState, id, period.end.plusDays(1))
+      case None          => updatedState
+    }
+
+    // This function checks yet again that start is before end, even though we just checked that!
+    createNewPeriod(stateWithNewStart, id, period)
+    /*
+     * This function is a valiant attempt to correctly integrate a new period holding the constraints
+     * of no gaps or overlaps, but is as a result insanely complex.
+     *
+     * It also makes the assumption that the state is already correct. is the behaviour desired in this case?
+     * If we already have a gap/overlap what should happen?
+     */
   }
 }
 
@@ -123,10 +144,5 @@ object InvalidStates {
       3 -> Period(LocalDate.of(2021, 3, 31), LocalDate.of(2021, 3, 1)),
     ),
   )
-
-  case class PartSolution(d1: LocalDate, d2: LocalDate) {
-    def start: LocalDate = if (d1.isBefore(d2)) d1 else d2
-    def end: LocalDate   = if (d1.isAfter(d2)) d1 else d2
-  }
 
 }

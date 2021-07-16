@@ -2,28 +2,25 @@ package contiguous
 
 import java.time.LocalDate
 
-case class ContiguousPeriods(dates: Set[LocalDate])
+// Reducing data redundancy here means that we cannot represent gaps or overlaps.
+case class ContiguousPeriods(startDates: Set[LocalDate])
 object ContiguousPeriods {
 
   def createNewPeriod(contiguousPeriods: ContiguousPeriods, date: LocalDate): ContiguousPeriods =
-    contiguousPeriods.copy(dates = contiguousPeriods.dates + date)
+    contiguousPeriods.copy(startDates = contiguousPeriods.startDates + date)
 
-  def updatePeriod(contiguousPeriods: ContiguousPeriods, oldDate: LocalDate, newDate: LocalDate): ContiguousPeriods =
-    if (!contiguousPeriods.dates.contains(oldDate)) {
-      sys.error(s"No period exists starting on $oldDate")
+  def updatePeriod(contiguousPeriods: ContiguousPeriods, oldStart: LocalDate, newStart: LocalDate): ContiguousPeriods =
+    if (!contiguousPeriods.startDates.contains(oldStart)) {
+      sys.error(s"No period exists starting on $oldStart")
     } else {
-      contiguousPeriods.copy(dates = (contiguousPeriods.dates - oldDate) + newDate)
+      contiguousPeriods.copy(startDates = (contiguousPeriods.startDates - oldStart) + newStart)
     }
 
 }
 
-case class ClosedProjection(periods: List[Period])
-
-case class OpenPeriod(start: LocalDate)
-case class OpenProjection(closedPeriods: List[Period], current: Option[OpenPeriod])
-
 object OnlyValidStates {
-  // |           |           |           |
+  // Just representing the start dates
+  // |           |           |
   val correct = ContiguousPeriods(
     Set(
       LocalDate.of(2021, 1, 1),
@@ -41,18 +38,23 @@ object OnlyValidStates {
   )
 }
 
-object InjectiveStateFunction {
+object InjectiveStateFunctions {
+
+  case class ClosedProjection(periods: List[Period])
 
   def closedProjectionInclusive(contiguousPeriods: ContiguousPeriods): ClosedProjection = {
-    val sorted = contiguousPeriods.dates.toList.sorted
+    val sorted = contiguousPeriods.startDates.toList.sorted
     val periods = sorted.zip(sorted.drop(1)).map { case (start, nextStart) =>
       Period(start = start, end = nextStart.minusDays(1))
     }
     ClosedProjection(periods)
   }
 
+  case class OpenPeriod(start: LocalDate)
+  case class OpenProjection(closedPeriods: List[Period], current: Option[OpenPeriod])
+
   def openProjectionExclusive(contiguousPeriods: ContiguousPeriods): OpenProjection = {
-    val sorted = contiguousPeriods.dates.toList.sorted
+    val sorted = contiguousPeriods.startDates.toList.sorted
     val periods = sorted.zip(sorted.drop(1)).map { case (start, nextStart) =>
       Period(start = start, end = nextStart)
     }

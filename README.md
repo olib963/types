@@ -1,4 +1,4 @@
-# Foo
+# Impossible States
 
 Replacing shotgun validation with different datastructures reduces the amount of code you write, possible test cases
 and means it's impossible for a client or another developer to create a broken state.

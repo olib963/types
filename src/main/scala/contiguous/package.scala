@@ -1,9 +1,13 @@
 package object contiguous {
 
-  // Operations possible?
+  /* Our application needs to represent a contiguous list of time periods. Our use case for this was billing periods.
+   *
+   * It's invalid for a period to start before it ends. It's also invalid for periods to have gaps between them or
+   * for any two periods to overlap.
+   *
+   * The standard representation is to model each period as an independent entity that can be manipulated.
+   *
+   * We can eliminate the invalid states by modelling the whole timeline as one interconnected entity.
+   */
 
-  // Reduce to Set[Date]. Model the pipes not the arrows!
-  // |            |                |         |
-
-  // Applications: Billing periods, ASP, Contracts with just no overlap and end after start, maybe allow gaps.
 }
