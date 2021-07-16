@@ -1,15 +1,23 @@
 # Impossible States
 
-Replacing shotgun validation with different datastructures reduces the amount of code you write, possible test cases
-and means it's impossible for a client or another developer to create a broken state.
-
 ## What is the repo about?
+
+By changing the datastructures we represent our state with we can remove the possibility of having our application in 
+an invalid state. This repo contains examples of the application of this principle.
 
 ## Why does it exist?
 
+Applying this to our codebases means there are fewer code paths, possible operations and consequently fewer tests to write.
+Making it impossible for any client interaction to fundamentally break your state is a fantastic goal to achieve. This
+is not something we widely talk about so this repository will serve as a hub for examples of such improvements, hopefully
+inspiring us to recognise when we can apply this ourselves.
+
+It is, of course, always possible for applications to get into an "incorrect" state e.g. by a user typing in the wrong
+date, but this repo focussed on removing the possibility of "invalid" states. 
+
 ## How to use it?
 
-The repo is broken into packages that run through an example of applying a model change to make
+The repo has been broken into packages that run through an example of applying a model change to make
 it impossible to create invalid states.
 
 - Each package has a package object roughly outlining the domain modelling problem the package tackles.
@@ -35,7 +43,7 @@ by a simple `fold`.
 
 - `Option` composition can be done with a `for` comprehension. Composing the `Option`s this way hides the fact that we know
 we _should_ never have `None` returned from `maxOption` iff (if and only if) `minOption` returns a `Some`. Performing a 
-for` comprehension hides the fact that we are having to match on impossible cases.
+`for` comprehension hides the fact that we are having to match on impossible cases.
 
 ## External Links
 
