@@ -4,11 +4,7 @@ case class NonEmptyList[A](head: A, tail: List[A]) {
   def map[B](f: A => B): NonEmptyList[B] = NonEmptyList(f(head), tail.map(f))
 }
 
-trait ValidApplication {
-  def describe(ints: NonEmptyList[Int]): ListDescription
-}
-
-object NonEmptyList extends ValidApplication {
+object NonEmptyList {
   def describe(ints: NonEmptyList[Int]): ListDescription = ListDescription(min(ints), max(ints), sum(ints))
 
   def sum(ints: NonEmptyList[Int]): Int =

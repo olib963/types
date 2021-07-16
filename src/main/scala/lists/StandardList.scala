@@ -1,12 +1,9 @@
 package lists
 
-trait Application {
-  def describe(ints: List[Int]): ListDescription
-}
+object StandardList {
 
-object StandardList extends Application {
-
-  def describe(ints: List[Int]): ListDescription = ListDescription(min(ints), max(ints), sum(ints))
+  def describe(ints: List[Int]): ListDescription =
+    ListDescription(min(ints), max(ints), sum(ints))
 
   def sum(ints: List[Int]): Int = ints match {
     case Nil          => 0
@@ -25,11 +22,18 @@ object StandardList extends Application {
 
 }
 
-trait OptionApplication {
-  def describeOption(ints: List[Int]): Option[ListDescription]
+object ValidStates {
+  val correct = List(1, 2, 3)
+
+  // Accidentally typed in the wrong number of -3
+  val incorrect = List(1, 2, -3)
 }
 
-object StandardListWithOption extends OptionApplication {
+object InvalidStates {
+  val empty = List.empty[Int]
+}
+
+object StandardListWithOption {
 
   def describeOption(ints: List[Int]): Option[ListDescription] =
     minOption(ints) match {
@@ -55,24 +59,14 @@ object StandardListWithOption extends OptionApplication {
     case Nil          => None
     case head :: tail => Some(tail.foldLeft(head)(_ max _))
   }
+}
 
-  def optionClient = {
-    val description = describeOption(List(1, 2, 3))
+object OptionClient {
+  def useAPI(): Unit = {
+    val description = StandardListWithOption.describeOption(List(1, 2, 3))
     description match {
       case Some(value) => println(value)
       case None        => sys.error("I know my list is not empty!")
     }
   }
-
-}
-
-object InvalidStates {
-  val empty = List.empty[Int]
-}
-
-object ValidStates {
-  val correct = List(1, 2, 3)
-
-  // Accidentally typed in the wrong number of -3
-  val incorrect = List(1, 2, -3)
 }

@@ -1,10 +1,12 @@
 package object lists {
-  // TODO: Write up a little domain pre-amble
 
-  // Pass in empty list. Explosion
+  /* A simple application that takes lists of integers and returns a description including the minimum, maximum and total
+   *
+   * The only invalid state is an empty list
+   *
+   * The approaches used to manage a standard `List[Int]` data structure are in StandardList
+   *
+   * We can eliminate the invalid states using NonEmptyList
+   */
 
-  // Option return? Passes the buck. Re-checking ..... leads to validation workaround and context assumptions, find a term for this.
-
-  // NEL make it be client side! You cannot create an invalid state. Client handling
-  // Write client side code for examples
 }

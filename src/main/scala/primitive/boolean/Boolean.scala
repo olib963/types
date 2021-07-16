@@ -1,4 +1,4 @@
-package primitive
+package primitive.boolean
 
 case class MyStatus(isActive: Boolean, isDeleted: Boolean)
 object MyStatus {

@@ -1,4 +1,4 @@
-package primitive
+package primitive.option
 
 case class StandardRedux(loading: Boolean, failure: Option[Throwable], success: Option[String])
 object StandardRedux {
