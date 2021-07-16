@@ -23,20 +23,19 @@ The packages in increasing complexity order (roughly) are:
 - `survey`
 - `contiguous`
 
-
-
 ## Inefficiencies
 
-There are more efficient/idiomatic ways of implementing certain things in this repo, but I have chosen the slightly
-less standard approach to illustrate a point in each case. I feel the points would be hidden by the idiomatic approach. For example
-in the `NonEmptyList` example:
+There are more efficient/idiomatic ways of implementing certain things in this repo, but the slightly less standard approach
+has been chosen to illustrate a point in each case that would be hidden by the idiomatic approach. Taking the `NonEmptyList` example:
 
-- The sum of a list doesn't require a match on the empty list, but we are handling the invalid state of empty list in every 
-function, this is more apparent for `min` & `max` and is made explicit in `sum` for this reason. When moving to the NEL we
-can literally see a code path removed from every function.
+- The `sum` of a `List[Int]` doesn't require an explicit match on the empty list, but we are handling the invalid state
+of empty list in every function. This is more apparent for `min` & `max` and is made explicit in `sum` for this reason.
+When moving to the `NonEmptyList` we can literally see a code path removed from every function, this would be hidden
+by a simple `fold`.
 
-- `Option` composition can be done with a for comprehension. Composing the `Option`s this way hides the fact that we know we _should_ 
-never have `None, None`, so why do we need to compose them at all?
+- `Option` composition can be done with a `for` comprehension. Composing the `Option`s this way hides the fact that we know
+we _should_ never have `None` returned from `maxOption` iff (if and only if) `minOption` returns a `Some`. Performing a 
+for` comprehension hides the fact that we are having to match on impossible cases.
 
 ## External Links
 
@@ -56,9 +55,5 @@ non-interactive elements and enforces accessibility where possible.
 If you come up with any other new examples feel free to open a PR with a new package following
 the same general layout as the others.
 
-Also feel free to add any related links you feel are a good representation of these principles.
+If you find any other external links on similar topics also feel free to add these in a PR.
 
-- [ ] Come up with name for project: Validation is for suckers?? Parsing is great. Simplifying your state. 
-    Always Valid, mostly correct. Should not => Can not. Replacing tests with types! Some kind of shotgun validation pun
-- [ ] Consistency in the package presentation
-- [ ] Tests and property tests

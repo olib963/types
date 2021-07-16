@@ -13,6 +13,7 @@ object ZipList {
 }
 
 case class Question(question: String, answer: Option[String])
+
 object Survey {
   type Survey = ZipList[Question]
   def of(questions: NonEmptyList[String]): Survey =
@@ -22,6 +23,7 @@ object Survey {
     val currentWithAnswer = survey.current.copy(answer = Some(answer))
     survey.copy(current = currentWithAnswer)
   }
+
   def forwards(survey: Survey): Survey = survey.next match {
     case Nil => survey // No more questions
     case nextQuestion :: remainingQuestions =>
@@ -31,6 +33,7 @@ object Survey {
         next = remainingQuestions,
       )
   }
+
   def back(survey: Survey): Survey = survey.previous.lastOption match {
     case None => survey // No previous questions
     case Some(previousQuestion) =>
@@ -48,17 +51,20 @@ object Survey {
 }
 
 object OnlyValidStates {
-  val initial = Survey.of(NonEmptyList("What's your name?", List("What's your favourite colour?")))
+  private val initial =
+    Survey.of(NonEmptyList("What's your name?", List("What's your favourite colour?")))
+
   val correct = Survey.answerQuestion(initial, "Oli")
 
-  val incorrect = Survey.answerQuestion(initial, "Red") // Answered the wrong question
+  // Answered the wrong question
+  val incorrect = Survey.answerQuestion(initial, "Red")
 }
 
-object InjectiveFunction {
+object InjectiveStateFunction {
   import survey.Survey.Survey
-  def back(survey: Survey): FirstAttempt = {
+  def toSeparated(survey: Survey): SeparatedSurvey = {
     val questions = ZipList.toList(survey)
-    FirstAttempt(
+    SeparatedSurvey(
       questions = questions.map(_.question),
       answers = questions.map(_.answer),
       current = survey.previous.size,

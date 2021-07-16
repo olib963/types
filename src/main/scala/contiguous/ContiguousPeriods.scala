@@ -40,7 +40,8 @@ object OnlyValidStates {
     ),
   )
 }
-object InjectiveFunctions {
+
+object InjectiveStateFunction {
 
   def closedProjectionInclusive(contiguousPeriods: ContiguousPeriods): ClosedProjection = {
     val sorted = contiguousPeriods.dates.toList.sorted
