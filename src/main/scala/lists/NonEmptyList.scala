@@ -5,7 +5,8 @@ case class NonEmptyList[A](head: A, tail: List[A]) {
 }
 
 object NonEmptyList {
-  def describe(ints: NonEmptyList[Int]): ListDescription = ListDescription(min(ints), max(ints), sum(ints))
+  def describe(ints: NonEmptyList[Int]): ListDescription =
+    ListDescription(min(ints), max(ints), sum(ints))
 
   def sum(ints: NonEmptyList[Int]): Int =
     ints.tail.foldLeft(ints.head)(_ + _)
@@ -28,4 +29,12 @@ object OnlyValidStates {
 object InjectiveStateFunction {
   def toOldState(newState: NonEmptyList[Int]): List[Int] =
     newState.head :: newState.tail
+}
+
+object OldToNew {
+  // This strips out invalid states from the old representation such that we can try to use old states.
+  def fromList(list: List[Int]): Option[NonEmptyList[Int]] = list match {
+    case head :: tail => Some(NonEmptyList(head, tail))
+    case Nil          => None
+  }
 }
