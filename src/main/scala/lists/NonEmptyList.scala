@@ -32,7 +32,7 @@ object InjectiveStateFunction {
 }
 
 object OldToNew {
-  // This strips out invalid states from the old representation such that we can try to use old states.
+  // This strips out invalid states from the old representation, but the validation check only happens once, right here.
   def fromList(list: List[Int]): Option[NonEmptyList[Int]] = list match {
     case head :: tail => Some(NonEmptyList(head, tail))
     case Nil          => None

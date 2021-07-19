@@ -3,7 +3,7 @@ package primitive.boolean
 /*
  * For this example it's entirely possible that we only started with one boolean. Let's say
  * we originally had State(isActive: Boolean). We likely needed to introduce a new state which
- * allowed for invalid states by simply adding a new boolean. When adding new features we can
+ * we did by simply adding a new boolean, this enabled invalid states. When adding new features we can
  * always take a moment to consider how it affects the whole data model.
  */
 case class Status(isActive: Boolean, isDeleted: Boolean)

@@ -38,7 +38,7 @@ object ValidStates {
     current = 0,
   )
 
-  // Answered the wrong question
+  // Answered the wrong questions
   val incorrect = SeparatedSurvey(
     questions = List("What's your name?", "What's your favourite colour?"),
     answers = List(Some("Red"), Some("Oli")),

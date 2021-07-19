@@ -35,11 +35,15 @@ object InvalidStates {
   val empty = List.empty[Int]
 }
 
-/*A common approach to solving this is to make each function total by  handling the invalid states and returning
+/*A common approach to solving this is to make each function total by handling the invalid states and returning
  * some "error value" for these cases. In this case we are using Option[A] to represent this.
+ *
+ * N.B. Total functions are functions that are defined for all of their possible input values. Partial functions
+ * are only defined on a subset of input values.
  */
 object StandardListWithOption {
 
+  // sum is still the same since it was already a total function
   def sum(ints: List[Int]): Int = ints match {
     case Nil          => 0
     case head :: tail => tail.foldLeft(head)(_ + _)
