@@ -43,8 +43,7 @@ object InjectiveStateFunctions {
   case class ClosedProjection(periods: List[Period])
 
   def closedProjectionInclusive(contiguousPeriods: ContiguousPeriods): ClosedProjection = {
-    val sorted = contiguousPeriods.startDates.toList.sorted
-    val periods = sorted.zip(sorted.drop(1)).map { case (start, nextStart) =>
+    val periods = zipWithNext(sorted(contiguousPeriods)).map { case (start, nextStart) =>
       Period(start = start, end = nextStart.minusDays(1))
     }
     ClosedProjection(periods)
@@ -54,10 +53,16 @@ object InjectiveStateFunctions {
   case class OpenProjection(closedPeriods: List[Period], current: Option[OpenPeriod])
 
   def openProjectionExclusive(contiguousPeriods: ContiguousPeriods): OpenProjection = {
-    val sorted = contiguousPeriods.startDates.toList.sorted
-    val periods = sorted.zip(sorted.drop(1)).map { case (start, nextStart) =>
+    val sortedDates = sorted(contiguousPeriods)
+    val periods = zipWithNext(sortedDates).map { case (start, nextStart) =>
       Period(start = start, end = nextStart)
     }
-    OpenProjection(closedPeriods = periods, current = sorted.lastOption.map(OpenPeriod))
+    OpenProjection(closedPeriods = periods, current = sortedDates.lastOption.map(OpenPeriod))
   }
+
+  private def sorted(contiguousPeriods: ContiguousPeriods) =
+    contiguousPeriods.startDates.toList.sorted
+
+  private def zipWithNext(sorted: List[LocalDate]) =
+    sorted.zip(sorted.drop(1))
 }
