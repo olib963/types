@@ -11,3 +11,13 @@ val testDependencies = List(
 )
 
 libraryDependencies ++= testDependencies.map(_ % Test)
+
+scalacOptions ++= List(
+  "-unchecked",
+  "-deprecation",
+  "-feature",
+  "-Xlint:infer-any",
+  "-Xlint:unused",
+  // Fail compilation on warnings
+  "-Xfatal-warnings",
+)
