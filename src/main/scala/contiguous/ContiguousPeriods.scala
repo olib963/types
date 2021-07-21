@@ -25,7 +25,7 @@ object OnlyValidStates {
     Set(
       LocalDate.of(2021, 1, 1),
       LocalDate.of(2021, 3, 1),
-      LocalDate.of(2021, 2, 1), // February is in here last, doesn't matter!
+      LocalDate.of(2021, 2, 1),
     ),
   )
 
