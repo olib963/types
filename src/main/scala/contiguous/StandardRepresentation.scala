@@ -88,6 +88,8 @@ object StandardRepresentation {
      *
      * It also makes the assumption that the state is already correct. is the behaviour desired in this case?
      * If we already have a gap/overlap what should happen?
+     *
+     * There are a couple of subtle bugs in the above! Can you find them?
      */
   }
 }

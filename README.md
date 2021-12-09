@@ -31,6 +31,9 @@ The packages in increasing complexity order (roughly) are:
 - `survey`
 - `contiguous`
 
+The original repo was written for Scala, but Golang examples have been added in the `golang` directory where
+possible. Due to Go's lack of sum types certain refactorings (e.g. the redux one) are not possible.
+
 ## Inefficiencies
 
 There are more efficient/idiomatic ways of implementing certain things in this repo, but the slightly less standard approach
@@ -55,8 +58,6 @@ Links to talks and blog posts on similar topics.
 data structures in Elm to enforce constraints. This is where the survey example comes from.
 - [Elm Accessible HTML](https://github.com/tesk9/accessible-html) A library that does not allow you to trigger events from 
 non-interactive elements and enforces accessibility where possible.
-
-<!-- TODO more links -->
 
 ## Contribution
 
