@@ -5,6 +5,7 @@ case class NonEmptyList[A](head: A, tail: List[A]) {
 }
 
 object NonEmptyList {
+  def apply[A](head: A, tail: A*): NonEmptyList[A] = NonEmptyList(head, tail.toList)
   def describe(ints: NonEmptyList[Int]): ListDescription =
     ListDescription(min(ints), max(ints), sum(ints))
 
@@ -20,10 +21,10 @@ object NonEmptyList {
 }
 
 object OnlyValidStates {
-  val correct = NonEmptyList(1, List(2, 3))
+  val correct = NonEmptyList(1, 2, 3)
 
   // Accidentally typed in the wrong number of -3
-  val incorrect = NonEmptyList(1, List(2, -3))
+  val incorrect = NonEmptyList(1, 2, -3)
 }
 
 object InjectiveStateFunction {

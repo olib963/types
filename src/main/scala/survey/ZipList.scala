@@ -52,7 +52,7 @@ object Survey {
 
 object OnlyValidStates {
   private val initial =
-    Survey.of(NonEmptyList("What's your name?", List("What's your favourite colour?")))
+    Survey.of(NonEmptyList("What's your name?", "What's your favourite colour?"))
 
   val correct = Survey.answerQuestion(initial, "Oli")
 
