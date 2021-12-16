@@ -84,7 +84,7 @@ func parseNel(ints []int) *NonEmptyIntList {
 
 func staticClient() {
 	description := describeNel(NonEmptyOf(1, 2, 3))
-	println(description.String()) // Yay! No more errors to deal with
+	println(description.ToString()) // Yay! No more errors to deal with
 }
 
 type Request struct {
@@ -104,6 +104,6 @@ func rpcClient(request Request) Response {
 	}
 	return Response{
 		code:        200,
-		description: describeNel(*nel).String(),
+		description: describeNel(*nel).ToString(),
 	}
 }

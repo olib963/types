@@ -8,6 +8,6 @@ type ListDescription struct {
 	Total int
 }
 
-func (d ListDescription) String() string {
+func (d ListDescription) ToString() string {
 	return fmt.Sprintf("%+v", d)
 }

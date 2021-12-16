@@ -21,9 +21,12 @@ func back(survey SeparatedSurvey) {
 
 func printAll(survey SeparatedSurvey) {
 	for i, question := range survey.questions {
-		answer := survey.answers[i]
+		answer := ""
+		if survey.answers[i] != nil {
+			answer = *survey.answers[i]
+		}
 		number := i + 1
-		println(fmt.Sprintf("Question %v: %s: %v"), number, question, answer)
+		println(fmt.Sprintf("Question %v: %s: %v", number, question, answer))
 	}
 }
 

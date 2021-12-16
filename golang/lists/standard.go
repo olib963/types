@@ -116,5 +116,5 @@ func useAPI() {
 	if err != nil {
 		panic("I already know my list isn't empty! Why do I need to check this??")
 	}
-	println(description.String())
+	println(description.ToString())
 }

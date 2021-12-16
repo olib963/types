@@ -23,7 +23,7 @@ func updatePeriodEnd(state StandardRepresentation, id DatabaseId, newEnd time.Ti
 		return state, errors.New(fmt.Sprintf("Period with Id %v does not exist", id))
 	}
 	if !period.start.Before(newEnd) {
-		return state, errors.New(fmt.Sprintf("%v is an invalid end date! Start must be before end for %+V", newEnd, period))
+		return state, errors.New(fmt.Sprintf("%v is an invalid end date! Start must be before end for %+v", newEnd, period))
 	}
 
 	newPeriod := Period{

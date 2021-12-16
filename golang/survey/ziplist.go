@@ -67,16 +67,25 @@ func backZip(survey Survey) Survey {
 
 func printAllZip(survey Survey) {
 	for i, question := range toList(survey) {
+		answer := ""
+		if question.answer != nil {
+			answer = *question.answer
+		}
 		number := i + 1
-		println(fmt.Sprintf("Question %v: %s: %v"), number, question.question, question.answer)
+		println(fmt.Sprintf("Question %v: %s: %v", number, question.question, answer))
 	}
 }
 
 var (
 	// Only Valid States
-	initial   = SurveyOf("What's your name?", "What's your favourite colour?")
-	correct   = answerQuestionZip(initial, "Oli")
-	incorrect = answerQuestionZip(initial, "Red")
+	initial           = SurveyOf("What's your name?", "What's your favourite colour?")
+	correct           = answerQuestionZip(initial, "Oli")
+	answerIncorrectly = func() Survey {
+		firstAnswered := answerQuestionZip(initial, "Red")
+		secondQuestion := forwardsZip(firstAnswered)
+		return answerQuestionZip(secondQuestion, "Oli")
+	}
+	incorrect = answerIncorrectly()
 )
 
 func toList(survey Survey) []Question {

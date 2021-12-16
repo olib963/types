@@ -90,7 +90,7 @@ func OpenProjectionExclusive(contiguousPeriods ContiguousPeriods) OpenProjection
 	var currentPeriod *OpenPeriod
 	if len(sortedDates) > 0 {
 		currentPeriod = &OpenPeriod{
-			start: sortedDates[len(sortedDates)],
+			start: sortedDates[len(sortedDates)-1],
 		}
 	}
 	return OpenProjection{closedPeriods: periods, current: currentPeriod}
