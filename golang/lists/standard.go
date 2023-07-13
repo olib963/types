@@ -69,7 +69,7 @@ func TryDescribe(ints []int) (ListDescription, bool) {
 
 	max, ok := tryMax(ints)
 	if !ok {
-		// We will _never_ not be here, because we already checked
+		// We will _never_ be here, because we already checked
 		// it when we did tryMin!
 		return ListDescription{}, ok
 	}
