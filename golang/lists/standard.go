@@ -61,7 +61,7 @@ var (
  * are only defined on a subset of input values.
  */
 
-func DescribeError(ints []int) (ListDescription, bool) {
+func TryDescribe(ints []int) (ListDescription, bool) {
 	min, ok := tryMin(ints)
 	if !ok {
 		return ListDescription{}, ok
@@ -112,7 +112,7 @@ func tryMax(ints []int) (int, bool) {
 
 // The burden is further passed up to our clients!
 func useAPI() {
-	description, ok := DescribeError([]int{1, 2, 3})
+	description, ok := TryDescribe([]int{1, 2, 3})
 	if !ok {
 		panic("I already know my list isn't empty! Why do I need to check this??")
 	}
