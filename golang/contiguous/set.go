@@ -1,53 +1,52 @@
 package contiguous
 
-import "time"
-
 // Golang does not have a set implementation so I have written one here
-type DateSet struct {
-	internal map[time.Time]struct{}
+
+type Set[A comparable] struct {
+	internal map[A]struct{}
 }
 
-func SetOf(dates ...time.Time) DateSet {
-	set := DateSet{internal: make(map[time.Time]struct{})}
-	for _, date := range dates {
-		set = set.Add(date)
+func SetOf[A comparable](values ...A) Set[A] {
+	set := Set[A]{internal: make(map[A]struct{})}
+	for _, v := range values {
+		set = set.Add(v)
 	}
 	return set
 }
 
-func (set DateSet) Add(date time.Time) DateSet {
+func (set Set[A]) Add(a A) Set[A] {
 	c := set.copy()
-	c.internal[date] = struct{}{}
+	c.internal[a] = struct{}{}
 	return c
 }
 
-func (set DateSet) Remove(date time.Time) DateSet {
+func (set Set[A]) Remove(a A) Set[A] {
 	c := set.copy()
-	delete(c.internal, date)
+	delete(c.internal, a)
 	return c
 }
 
-func (set DateSet) Contains(date time.Time) bool {
-	_, exists := set.internal[date]
+func (set Set[A]) Contains(a A) bool {
+	_, exists := set.internal[a]
 	return exists
 }
 
-func (set DateSet) toSlice() []time.Time {
-	s := make([]time.Time, len(set.internal))
+func (set Set[A]) toSlice() []A {
+	s := make([]A, len(set.internal))
 	index := 0
-	for date := range set.internal {
-		s[index] = date
+	for a := range set.internal {
+		s[index] = a
 		index++
 	}
 	return s
 }
 
-func (set DateSet) copy() DateSet {
-	c := make(map[time.Time]struct{})
+func (set Set[A]) copy() Set[A] {
+	c := make(map[A]struct{})
 	for k, v := range set.internal {
 		c[k] = v
 	}
-	return DateSet{
+	return Set[A]{
 		internal: c,
 	}
 }

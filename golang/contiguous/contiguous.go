@@ -9,7 +9,7 @@ import (
 
 // Reducing data redundancy here means that we cannot represent gaps or overlaps.
 type ContiguousPeriods struct {
-	startDates DateSet
+	startDates Set[time.Time]
 }
 
 func createNewPeriodContiguous(contiguousPeriods ContiguousPeriods, date time.Time) ContiguousPeriods {
