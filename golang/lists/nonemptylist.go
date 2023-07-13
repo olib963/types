@@ -45,9 +45,9 @@ func maxNel(ints NonEmptyList[int]) int {
 	})
 }
 
-func NelReduce[A any](ints NonEmptyList[A], f func(A, A) A) A {
-	result := ints.Head
-	for _, i := range ints.Tail {
+func NelReduce[A any](nel NonEmptyList[A], f func(A, A) A) A {
+	result := nel.Head
+	for _, i := range nel.Tail {
 		result = f(result, i)
 	}
 	return result
