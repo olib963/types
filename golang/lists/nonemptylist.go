@@ -1,19 +1,19 @@
 package lists
 
-type NonEmptyIntList struct {
-	Head int
-	Tail []int
+type NonEmptyList[A any] struct {
+	Head A
+	Tail []A
 }
 
-func NonEmptyOf(head int, tail ...int) NonEmptyIntList {
-	return NonEmptyIntList{
+func NonEmptyOf[A any](head A, tail ...A) NonEmptyList[A] {
+	return NonEmptyList[A]{
 		Head: head,
 		Tail: tail,
 	}
 }
 
 // No error and is still a total function!
-func describeNel(ints NonEmptyIntList) ListDescription {
+func describeNel(ints NonEmptyList[int]) ListDescription {
 	return ListDescription{
 		Min:   minNel(ints),
 		Max:   maxNel(ints),
@@ -21,13 +21,13 @@ func describeNel(ints NonEmptyIntList) ListDescription {
 	}
 }
 
-func sumNel(ints NonEmptyIntList) int {
+func sumNel(ints NonEmptyList[int]) int {
 	return NelReduce(ints, func(a int, b int) int {
 		return a + b
 	})
 }
 
-func minNel(ints NonEmptyIntList) int {
+func minNel(ints NonEmptyList[int]) int {
 	return NelReduce(ints, func(a int, b int) int {
 		if a < b {
 			return a
@@ -36,7 +36,7 @@ func minNel(ints NonEmptyIntList) int {
 	})
 }
 
-func maxNel(ints NonEmptyIntList) int {
+func maxNel(ints NonEmptyList[int]) int {
 	return NelReduce(ints, func(a int, b int) int {
 		if a > b {
 			return a
@@ -45,7 +45,7 @@ func maxNel(ints NonEmptyIntList) int {
 	})
 }
 
-func NelReduce(ints NonEmptyIntList, f func(int, int) int) int {
+func NelReduce[A any](ints NonEmptyList[A], f func(A, A) A) A {
 	result := ints.Head
 	for _, i := range ints.Tail {
 		result = f(result, i)
@@ -54,16 +54,16 @@ func NelReduce(ints NonEmptyIntList, f func(int, int) int) int {
 }
 
 var (
-	OnlyValidStates = []NonEmptyIntList{
+	OnlyValidStates = []NonEmptyList[int]{
 		NonEmptyOf(1, 2, 3),
 		NonEmptyOf(1, 2, -3), // Valid, but incorrect
 	}
-	// Even with Golang's 'zero values', NonEmptyIntList{} is really [0] so you can't create an empty list
+	// Even with Golang's 'zero values', NonEmptyList{} is really [0] so you can't create an empty list
 )
 
 // Function from new state to old state. Always works
-func toSlice(newState NonEmptyIntList) []int {
-	result := make([]int, len(newState.Tail)+1)
+func toSlice[A any](newState NonEmptyList[A]) []A {
+	result := make([]A, len(newState.Tail)+1)
 	result[0] = newState.Head
 	for i, element := range newState.Tail {
 		result[i+1] = element
@@ -72,13 +72,13 @@ func toSlice(newState NonEmptyIntList) []int {
 }
 
 // This strips out invalid states from the old representation, but the validation check only happens once, right here.
-func parseNel(ints []int) *NonEmptyIntList {
-	if len(ints) == 0 {
+func parseNel[A any](slice []A) *NonEmptyList[A] {
+	if len(slice) == 0 {
 		return nil
 	}
-	return &NonEmptyIntList{
-		Head: ints[0],
-		Tail: ints[1:],
+	return &NonEmptyList[A]{
+		Head: slice[0],
+		Tail: slice[1:],
 	}
 }
 
