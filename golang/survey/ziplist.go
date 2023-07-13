@@ -2,18 +2,13 @@ package survey
 
 import "fmt"
 
-type ZipListQuestions struct {
-	previous []Question
-	current  Question
-	next     []Question
+type ZipList[A any] struct {
+	previous []A
+	current  A
+	next     []A
 }
 
-type Question struct {
-	question string
-	answer   *string
-}
-
-type Survey = ZipListQuestions
+type Survey = ZipList[Question]
 
 func SurveyOf(firstQuestion string, others ...string) Survey {
 	next := make([]Question, len(others))
@@ -23,7 +18,7 @@ func SurveyOf(firstQuestion string, others ...string) Survey {
 			answer:   nil,
 		}
 	}
-	return ZipListQuestions{
+	return Survey{
 		previous: make([]Question, 0),
 		current: Question{
 			question: firstQuestion,
@@ -45,7 +40,7 @@ func forwardsZip(survey Survey) Survey {
 	}
 	// Move current question into the previous list
 	previous := append(survey.previous, survey.current)
-	return ZipListQuestions{
+	return Survey{
 		previous: previous,
 		current:  survey.next[0],
 		next:     survey.next[1:],
@@ -58,7 +53,7 @@ func backZip(survey Survey) Survey {
 	}
 	// Move the current question into the next list
 	next := append([]Question{survey.current}, survey.next...)
-	return ZipListQuestions{
+	return Survey{
 		previous: survey.previous[:len(survey.previous)],
 		current:  survey.previous[len(survey.previous)],
 		next:     next,
