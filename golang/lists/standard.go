@@ -1,7 +1,5 @@
 package lists
 
-import "errors"
-
 func Describe(ints []int) ListDescription {
 	return ListDescription{
 		Min:   min(ints),
@@ -23,7 +21,7 @@ func min(ints []int) int {
 		panic("Empty lists are not allowed!")
 	}
 	m := ints[0]
-	for _, i := range ints {
+	for _, i := range ints[1:] {
 		if i < m {
 			m = i
 		}
@@ -36,7 +34,7 @@ func max(ints []int) int {
 		panic("Empty lists are not allowed!")
 	}
 	m := ints[0]
-	for _, i := range ints {
+	for _, i := range ints[1:] {
 		if i > m {
 			m = i
 		}
@@ -63,57 +61,59 @@ var (
  * are only defined on a subset of input values.
  */
 
-func DescribeError(ints []int) (ListDescription, error) {
-	min, err := minError(ints)
-	if err != nil {
-		return ListDescription{}, err
+func DescribeError(ints []int) (ListDescription, bool) {
+	min, ok := tryMin(ints)
+	if !ok {
+		return ListDescription{}, ok
 	}
 
-	max, err := maxError(ints)
-	if err != nil {
-		// err will _never_ not be nil here, because we already checked it when we did minError!
-		return ListDescription{}, err
+	max, ok := tryMax(ints)
+	if !ok {
+		// We will _never_ not be here, because we already checked
+		// it when we did tryMin!
+		return ListDescription{}, ok
 	}
 	return ListDescription{
 		Min:   min,
 		Max:   max,
 		Total: sum(ints), // Sum is already a total function, so is fine to reuse
-	}, nil
+	}, true
 }
 
-// Our min and max functions can now be implemented, but they pass the problem up the call chain
-func minError(ints []int) (int, error) {
+// Our min and max functions can now be implemented,
+// but they pass the problem up the call chain
+func tryMin(ints []int) (int, bool) {
 	if len(ints) == 0 {
-		return 0, errors.New("Empty lists are not allowed!")
+		return 0, false
 	}
 	m := ints[0]
-	for _, i := range ints {
+	for _, i := range ints[1:] {
 		if i < m {
 			m = i
 		}
 	}
-	return m, nil
+	return m, true
 }
 
 // We now have a shotgun validation problem, every function is validating the same things because they can't tell
 // what was previously checked.
-func maxError(ints []int) (int, error) {
+func tryMax(ints []int) (int, bool) {
 	if len(ints) == 0 {
-		return 0, errors.New("Empty lists are not allowed!")
+		return 0, false
 	}
 	m := ints[0]
-	for _, i := range ints {
+	for _, i := range ints[1:] {
 		if i > m {
 			m = i
 		}
 	}
-	return m, nil
+	return m, true
 }
 
 // The burden is further passed up to our clients!
 func useAPI() {
-	description, err := DescribeError([]int{1, 2, 3})
-	if err != nil {
+	description, ok := DescribeError([]int{1, 2, 3})
+	if !ok {
 		panic("I already know my list isn't empty! Why do I need to check this??")
 	}
 	println(description.ToString())
